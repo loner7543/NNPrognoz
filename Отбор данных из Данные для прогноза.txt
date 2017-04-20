@@ -1,0 +1,86 @@
+/**
+ * Created by Egor on 12.11.2016.
+ */
+import org.jetbrains.annotations.Contract;
+
+import java.io.*;
+import java.util.*;
+
+public class Laba2 {
+
+    static double max(double data[][], int i) {
+        double max = data[0][0];
+
+        for (int j = 0; j < 130; j++)
+            if (data[j][i] > max) max = data[j][i];
+
+
+        return max;
+    }
+
+
+
+    public static void main(String[] args) {
+        double buffer;
+        FileWriter fileWriter,fileWriter_test;
+        String string, s[];
+        String substring;
+        double max;
+
+        double data[][]=new double [250][2];
+        int l=0;
+        int k=0;
+        try {
+            Scanner scanner = new Scanner(new File("Данные для прогноза.txt"));
+            fileWriter = new FileWriter("Данные для подачи нейронки.txt", false);
+            fileWriter_test=new FileWriter("test_data.txt",false);
+            while (scanner.hasNextLine()) {
+                string = scanner.nextLine();
+                s = string.split("\\,");
+                for (int i = 0; i < s.length; i++) {
+                    if ((i==2)||(i==3)) {
+                        buffer = Double.parseDouble(s[i]);
+                        data[k][l] = buffer;
+                        l++;
+                    }
+                }
+                k++;
+                l=0;
+            }
+
+            double dif_data[]=new double[250];
+            for (int i=0;i<k;i++)
+                dif_data[i]=data[i][0]-data[i][1];
+
+            double square_sums=0;
+            for (int i=0;i<k;i++)
+                square_sums+=dif_data[i]*dif_data[i];
+            square_sums=Math.sqrt(square_sums);
+
+            for (int i=0;i<k;i++)
+                dif_data[i];
+
+
+            for (int j = 0; j <250; j++) {
+
+             /*  if (j>199) {
+                    fileWriter_test.write(String.valueOf(dif_data[j]));
+                    fileWriter_test.write(" ");
+                }*/
+              //  else {
+                   fileWriter.write(String.valueOf(dif_data[j]));
+                   fileWriter.write(" ");
+               // }
+            }
+
+            fileWriter.close();
+            fileWriter_test.close();
+
+
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
