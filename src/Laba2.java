@@ -21,18 +21,19 @@ public class Laba2 {
         Perceptrone_model perceptrone_model=new Perceptrone_model(3,5,5,1);
 
 
-        double data_train[]=new double [200];
-        double data_test[]=new double [DATA_TEST_LENGTH];
-        double data_all[][]=new double[250][2];
+        double data_train[]=new double [200];// ьренировочные данные
+        double data_test[]=new double [DATA_TEST_LENGTH];//тестовые
+        double data_all[][]=new double[250][2];//трен +  тест
 
 
         int l=0;
         try {
             Scanner scanner = new Scanner(new File("Данные для прогноза.txt"));
-            Scanner Scanner_train = new Scanner(new File("Data for neural network.txt"));
+            //Scanner Scanner_train = new Scanner(new File("Data for neural network.txt"));
             l=0;
             int k=0;
 
+            //считыание и нормализация
             while (scanner.hasNextLine()) {
                 string = scanner.nextLine();
                 s = string.split("\\,");
@@ -54,25 +55,39 @@ public class Laba2 {
             double square_sums=0;
             for (int i=0;i<k;i++)
                 square_sums+=dif_data[i]*dif_data[i];
-            square_sums=Math.sqrt(square_sums);
+            square_sums=Math.sqrt(square_sums);//окончание нормализации
 
             for (int i=0;i<k;i++)
                 dif_data[i]/=square_sums;
 
-            for (int i=0;i<200;i++)
+            for (int i=0;i<200;i++){
                 data_train[i]=dif_data[i];
+            }
 
-            for (int i=0;i<DATA_TEST_LENGTH;i++)
-                data_test[i]=dif_data[200+i];
+            for (int i=0;i<DATA_TEST_LENGTH;i++){
+                data_test[i]=dif_data[200+i];//200+  тестоые данные
+            }
 
-
-            perceptrone_model.prognos_train(data_train,data_test);
+            perceptrone_model.prognos_train(data_train,data_test);// обучение
             double estimates[];
-            estimates=perceptrone_model.get_estimates(data_train,data_test);
+            estimates=perceptrone_model.get_estimates(data_train,data_test);//прогнозирование
 
             for (int i=0;i<estimates.length;i++)
-                System.out.println("Прогнозируемые данные: "+ estimates[i]*square_sums + " Реальные данные: "+data_test[i]*square_sums);
-            Scanner_train.close();
+            {
+                if (data_test[i]!=0.0)
+                {
+                    System.out.println("Прогнозируемые данные: "+ estimates[i]*square_sums + " Реальные данные: "+data_test[i]*square_sums);
+                }
+            }
+            System.out.println("Всего данных в файле(строк):  "+data_all.length);
+            int counter = 0;
+            for (int i = 0;i<data_test.length;i++){
+                if (data_test[i]!=0){
+                    counter++;
+                }
+            }
+            System.out.println("Размер тестовой выборки:  "+counter);
+           // Scanner_train.close();
 
 
         } catch (IOException e) {
